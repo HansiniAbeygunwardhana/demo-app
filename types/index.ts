@@ -6,12 +6,6 @@ export interface Borrower {
   status: string;
 }
 
-export interface Pipeline {
-  new: Borrower[];
-  in_review: Borrower[];
-  approved: Borrower[];
-}
-
 export interface BorrowerDetail {
   id: string;
   name: string;
@@ -26,4 +20,17 @@ export interface BorrowerDetail {
   source_of_funds: string;
   risk_signal: string | null;
   ai_flags: string[];
+}
+
+export interface BrokerInfo {
+  name: string;
+  deals: number;
+  approval_rate: string;
+  pending: number;
+}
+
+export interface Pipeline {
+  new: Borrower[];
+  in_review: Borrower[];
+  approved: Borrower[];
 }
