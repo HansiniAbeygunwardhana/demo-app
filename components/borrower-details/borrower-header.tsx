@@ -36,23 +36,58 @@ export function BorrowerHeader({ borrower }: BorrowerHeaderProps) {
   };
 
   return (
-    <div className="flex items-center gap-4">
+     <div className="relative flex flex-col px-6 py-4">
+  {/* Top Row: Avatar, Name, Loan Amount */}
+  <div className="flex items-center justify-between mb-2">
+    <div className="flex items-center gap-3">
       <Avatar>
         <AvatarFallback>{getInitials(borrower.name)}</AvatarFallback>
       </Avatar>
-      <div className="flex items-start gap-4 grow">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">{borrower.name}</h2>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
-            <span>{borrower.email}</span>
-            <span>{borrower.phone}</span>
-            <span className="font-semibold text-gray-900">{formatAmount(borrower.loan_amount)}</span>
-          </div>
-        </div>
-      </div>
+      <h2 className="text-2xl font-bold text-gray-900">{borrower.name}</h2>
+    </div>
+    <span className="text-4xl font-bold text-gray-900">
+      {formatAmount(borrower.loan_amount)}
+    </span>
+  </div>
+
+  {/* Contact Info and Status Row */}
+  <div className="flex items-end text-sm text-gray-600">
+    <div className="flex flex-col">
+      <span>{borrower.email}</span>
+      <span>{borrower.phone}</span>
+    </div>
+    
+    {/* Status badge aligned to bottom right */}
+    <div className="ml-auto">
       <Badge className={`${getStatusColor(borrower.status)} px-3 py-1`}>
         {borrower.status}
       </Badge>
     </div>
+  </div>
+</div>
+
+
+
+
+
+
+    // <div className="flex items-center gap-4 px-6">
+    //   <Avatar>
+    //     <AvatarFallback>{getInitials(borrower.name)}</AvatarFallback>
+    //   </Avatar>
+    //   <div className="flex items-start gap-4 grow">
+    //     <div>
+    //       <h2 className="text-2xl font-bold text-gray-900 mb-1">{borrower.name}</h2>
+    //       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
+    //         <span>{borrower.email}</span>
+    //         <span>{borrower.phone}</span>
+    //         <span className="font-semibold text-gray-900">{formatAmount(borrower.loan_amount)}</span>
+    //       </div>
+    //     </div>
+    //   </div>
+    //   <Badge className={`${getStatusColor(borrower.status)} px-3 py-1`}>
+    //     {borrower.status}
+    //   </Badge>
+    // </div>
   );
 }

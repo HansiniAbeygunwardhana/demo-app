@@ -90,8 +90,9 @@ export function BorrowerDetailPanel({ borrowerId }: BorrowerDetailPanelProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardContent className="p-6">
+      <Card className='px-5'>
+        <Card>
+        <CardContent>
           <BorrowerHeader borrower={borrower} />
         </CardContent>
       </Card>
@@ -107,6 +108,8 @@ export function BorrowerDetailPanel({ borrowerId }: BorrowerDetailPanelProps) {
         borrower={borrower}
         onEscalate={() => handleAction('escalate', borrower.id)}
       />
+      </Card>
+
     </div>
   );
 }

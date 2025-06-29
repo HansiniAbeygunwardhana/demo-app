@@ -23,10 +23,10 @@ export function AIExplainability({
   const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-6 p-0 ">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+          <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors py-6">
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span>AI Explainability</span>
@@ -42,7 +42,7 @@ export function AIExplainability({
         </CollapsibleTrigger>
         
         <CollapsibleContent>
-          <CardContent>
+          <CardContent className='pb-6'>
             {aiFlags.length > 0 ? (
               <div className="space-y-3 mb-6">
                 {aiFlags.map((flag, index) => (
