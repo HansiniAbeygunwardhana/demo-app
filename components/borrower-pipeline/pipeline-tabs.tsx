@@ -6,38 +6,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { BorrowerCard } from './borrower-card';
-import { Pipeline, Borrower } from '@/types';
+import { Borrower } from '@/types';
+import { usePipelineStore } from '@/store/pipelinestore';
+import { toast } from '@/hooks/use-toast';
+import { useBorrowerDetailStore } from '@/store/borrowerDetailsStore';
 
-interface PipelineTabsProps {
-  onBorrowerSelect: (borrower: Borrower) => void;
-  activeBorrowerId: string | null;
-}
 
-export function PipelineTabs({ onBorrowerSelect, activeBorrowerId }: PipelineTabsProps) {
-  const [pipeline, setPipeline] = useState<Pipeline | null>(null);
+export function PipelineTabs() {
+  
+  const {error , fetchPipeline , loading , pipeline} = usePipelineStore()
+  const {selectBorrower , selectedBorrower} = useBorrowerDetailStore();
   const [activeTab, setActiveTab] = useState('new');
   const [radioValue, setRadioValue] = useState('active');
 
   useEffect(() => {
-    fetchPipeline();
+    fetchPipeline().catch((err) => {
+      console.error('Failed to fetch pipeline:', err);
+      toast({
+        title: 'Error',
+        description: error || 'Failed to load pipeline data',
+        variant: 'destructive',
+      });
+    });
   }, []);
 
-  const fetchPipeline = async () => {
-    try {
-      const response = await fetch('/api/borrowers/pipeline');
-      const data = await response.json();
-      setPipeline(data);
-      
-      // Auto-select first borrower if none selected
-      if (!activeBorrowerId && data.new.length > 0) {
-        onBorrowerSelect(data.new[0]);
-      }
-    } catch (error) {
-      console.error('Failed to fetch pipeline:', error);
-    }
-  };
 
-  if (!pipeline) {
+  if (!pipeline || loading) {
     return <div className="animate-pulse">Loading...</div>;
   }
 
@@ -69,8 +63,8 @@ export function PipelineTabs({ onBorrowerSelect, activeBorrowerId }: PipelineTab
           <BorrowerCard
             key={borrower.id}
             borrower={borrower}
-            isActive={activeBorrowerId === borrower.id}
-            onClick={() => onBorrowerSelect(borrower)}
+            isActive={selectedBorrower?.id === borrower.id}
+            onClick={() => selectBorrower(borrower)}
           />
         ))}
       </div>

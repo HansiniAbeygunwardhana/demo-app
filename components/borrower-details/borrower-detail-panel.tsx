@@ -7,38 +7,17 @@ import { AIExplainability } from './ai-explainability';
 import { LoanSummary } from './loan-summary';
 import { BorrowerDetail } from '@/types';
 import { useToast } from '@/hooks/use-toast';
+import { useBorrowerDetailStore } from '@/store/borrowerDetailsStore';
 
-interface BorrowerDetailPanelProps {
-  borrowerId: string;
-}
 
-export function BorrowerDetailPanel({ borrowerId }: BorrowerDetailPanelProps) {
-  const [borrower, setBorrower] = useState<BorrowerDetail | null>(null);
-  const [loading, setLoading] = useState(true);
+export function BorrowerDetailPanel() {
+    const {
+    selectedBorrowerDetail : borrowerDetails,
+    selectedBorrower : borrower,
+    loading,
+  } = useBorrowerDetailStore();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (borrowerId) {
-      fetchBorrowerDetail(borrowerId);
-    }
-  }, [borrowerId]);
-
-  const fetchBorrowerDetail = async (id: string) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/borrowers/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setBorrower(data);
-      } else {
-        console.error('Failed to fetch borrower details');
-      }
-    } catch (error) {
-      console.error('Error fetching borrower details:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAction = async (action: string, id: string) => {
     try {
@@ -78,6 +57,16 @@ export function BorrowerDetailPanel({ borrowerId }: BorrowerDetailPanelProps) {
     );
   }
 
+  if (!borrowerDetails) {
+    return (
+      <Card className="h-fit">
+        <CardContent className="p-6 text-center text-gray-500">
+          Borrow details not available.
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!borrower) {
     return (
       <Card className="h-fit">
@@ -91,25 +80,24 @@ export function BorrowerDetailPanel({ borrowerId }: BorrowerDetailPanelProps) {
   return (
     <div className="space-y-6">
       <Card className='px-5'>
-        <Card>
+      <Card>
         <CardContent>
-          <BorrowerHeader borrower={borrower} />
+          <BorrowerHeader borrower={borrowerDetails} />
         </CardContent>
       </Card>
 
       <AIExplainability
-        aiFlags={borrower.ai_flags}
+        aiFlags={borrowerDetails.ai_flags}
         onRequestDocuments={() => handleAction('request-documents', borrower.id)}
         onSendToValuer={() => handleAction('send-valuer', borrower.id)}
         onApprove={() => handleAction('approve', borrower.id)}
       />
 
       <LoanSummary
-        borrower={borrower}
+        borrower={borrowerDetails}
         onEscalate={() => handleAction('escalate', borrower.id)}
       />
       </Card>
-
     </div>
   );
 }

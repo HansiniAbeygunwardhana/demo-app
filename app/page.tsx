@@ -7,13 +7,10 @@ import { BorrowerDetailPanel } from '@/components/borrower-details/borrower-deta
 import { BrokerOverviewPanel } from '@/components/broker-overview/broker-overview-panel';
 import { Toaster } from '@/components/ui/toaster';
 import { Borrower } from '@/types';
+import { useBorrowerDetailStore } from '@/store/borrowerDetailsStore';
 
 export default function Dashboard() {
-  const [activeBorrower, setActiveBorrower] = useState<Borrower | null>(null);
-
-  const handleBorrowerSelect = (borrower: Borrower) => {
-    setActiveBorrower(borrower);
-  };
+  const {selectedBorrower}  = useBorrowerDetailStore();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,16 +20,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Panel - Borrower Pipeline */}
           <div className="lg:col-span-4">
-            <PipelineTabs
-              onBorrowerSelect={handleBorrowerSelect}
-              activeBorrowerId={activeBorrower?.id || null}
-            />
+            <PipelineTabs/>
           </div>
 
           {/* Middle Panel - Borrower Details */}
           <div className="lg:col-span-5">
-            {activeBorrower ? (
-              <BorrowerDetailPanel borrowerId={activeBorrower.id} />
+            {selectedBorrower ? (
+              <BorrowerDetailPanel/>
             ) : (
               <div className="flex items-center justify-center h-64 bg-white rounded-lg border-2 border-dashed border-gray-300">
                 <p className="text-gray-500">Select a borrower to view details</p>
