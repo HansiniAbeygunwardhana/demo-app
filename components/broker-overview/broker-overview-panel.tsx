@@ -7,10 +7,12 @@ import { Label } from '@/components/ui/label';
 import { ContactButtons } from './contact-buttons';
 import { OnboardingWorkflow } from './onboarding-workflow';
 import { BrokerInfo } from '@/types';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export function BrokerOverviewPanel() {
   const [brokerInfo, setBrokerInfo] = useState<BrokerInfo | null>(null);
   const [aiAssistantEnabled, setAiAssistantEnabled] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     fetchBrokerInfo();
@@ -18,7 +20,7 @@ export function BrokerOverviewPanel() {
 
   const fetchBrokerInfo = async () => {
     try {
-      const response = await fetch('/api/broker/1'); // Using broker ID 1 as default
+      const response = await fetch('/api/broker/1');
       const data = await response.json();
       setBrokerInfo(data);
     } catch (error) {
@@ -53,13 +55,26 @@ export function BrokerOverviewPanel() {
 
   return (
     <Card className="h-fit">
-      <CardHeader>
-        <CardTitle>Broker Overview</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between sm:justify-start">
+        <CardTitle className="text-lg sm:text-xl">Broker Overview</CardTitle>
+
+        {/* Collapse Toggle for Mobile */}
+        <button
+          className="sm:hidden text-gray-600"
+          onClick={() => setIsExpanded(!isExpanded)}
+          aria-label="Toggle Broker Info"
+        >
+          {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+        </button>
       </CardHeader>
-      <CardContent>
+
+      {/* Content: Always visible on desktop, toggle on mobile */}
+      <CardContent
+        className={`transition-all ${isExpanded ? 'block' : 'hidden'} sm:block`}
+      >
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-4">{brokerInfo.name}</h3>
-          
+
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{brokerInfo.deals}</div>

@@ -1,4 +1,4 @@
-import { Search, HelpCircle, Bell, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Menu, Search, HelpCircle, Bell, AlertTriangle, CheckCircle, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
@@ -8,6 +8,7 @@ import { usePipelineStore } from '@/store/pipelinestore';
 import { useBorrowerDetailStore } from '@/store/borrowerDetailsStore';
 import { JSX, useEffect, useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
   {
@@ -74,9 +75,9 @@ export function Header() {
   const [searchString, setSearchString] = useState("");
   const { getAllBorrowers, loading } = usePipelineStore();
   const { selectBorrower } = useBorrowerDetailStore();
-
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -89,65 +90,60 @@ export function Header() {
         console.error('Failed to fetch notifications', err);
       }
     };
-
     fetchNotifications();
   }, []);
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">DemoApp</h1>
-        <NavigationMenu>
-          <NavigationMenuList className="space-x-4">
-            {NAV_ITEMS.map((item) => (
-              <NavigationMenuItem key={item.label}>
-                <NavigationMenuTrigger className="whitespace-nowrap">
-                  {item.label}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="p-4 bg-white shadow-md rounded-md w-64">
-                  <ul className="space-y-3">
-                    {item.links.map((link) => (
-                      <li key={link.name}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={link.href}
-                            className="block hover:bg-gray-100 p-2 rounded transition-colors whitespace-nowrap"
-                          >
-                            <div className="text-sm font-medium text-gray-900">
-                              {link.name}
-                            </div>
-                            {link.description && (
-                              <div className="text-xs text-muted-foreground">
-                                {link.description}
-                              </div>
-                            )}
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+
+        {/* Desktop Navigation */}
+        <div className="hidden sm:flex">
+          <NavigationMenu>
+            <NavigationMenuList className="space-x-4">
+              {NAV_ITEMS.map((item) => (
+                <NavigationMenuItem key={item.label}>
+                  <NavigationMenuTrigger className="whitespace-nowrap">
+                    {item.label}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="p-4 bg-white shadow-md rounded-md w-64">
+                    <ul className="space-y-3">
+                      {item.links.map((link) => (
+                        <li key={link.name}>
+                          <NavigationMenuLink asChild>
+                            <Link href={link.href} className="block hover:bg-gray-100 p-2 rounded transition-colors whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900">{link.name}</div>
+                              {link.description && (
+                                <div className="text-xs text-muted-foreground">{link.description}</div>
+                              )}
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Right-side Controls */}
         <div className="flex items-center space-x-4">
           <AutoComplete
-            selectedValue={
-              getAllBorrowers().length > 0 ? getAllBorrowers()[0].id : ""
-            }
+            selectedValue={getAllBorrowers().length > 0 ? getAllBorrowers()[0].id : ""}
             onSelectedValueChange={(value) => {
               const borrower = getAllBorrowers().find(b => b.id === value);
-              if (borrower) {
-                selectBorrower(borrower);
-              }
+              if (borrower) selectBorrower(borrower);
               setSearchString("");
             }}
             searchValue={searchString}
-            onSearchValueChange={(data) => { setSearchString(data) }}
-            items={getAllBorrowers().map((borrower) => ({
-              value: borrower.id,
-              label: borrower.name,
-              description: `${borrower.loan_type} - $${borrower.amount.toLocaleString()}`
+            onSearchValueChange={setSearchString}
+            items={getAllBorrowers().map((b) => ({
+              value: b.id,
+              label: b.name,
+              description: `${b.loan_type} - $${b.amount.toLocaleString()}`
             }))}
             isLoading={loading}
             emptyMessage="No items found."
@@ -183,9 +179,35 @@ export function Header() {
             </PopoverContent>
           </Popover>
 
-
+          {/* Hamburger Menu Button for Mobile */}
+          <Button variant="ghost" size="sm" className="sm:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="sm:hidden mt-4 space-y-4">
+          {NAV_ITEMS.map((item) => (
+            <div key={item.label}>
+              <div className="font-semibold text-gray-900 mb-2">{item.label}</div>
+              <ul className="space-y-2 pl-4">
+                {item.links.map((link) => (
+                  <li key={link.name}>
+                    <Link href={link.href} className="block text-gray-700 hover:text-gray-900">
+                      <div className="text-sm">{link.name}</div>
+                      {link.description && (
+                        <div className="text-xs text-muted-foreground">{link.description}</div>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
     </header>
   );
 }

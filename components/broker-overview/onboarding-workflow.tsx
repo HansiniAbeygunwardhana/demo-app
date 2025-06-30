@@ -5,7 +5,7 @@ import { CheckCircle2, Circle } from 'lucide-react';
 
 export function OnboardingWorkflow() {
   const [steps, setSteps] = useState<string[]>([]);
-  const [completedSteps, setCompletedSteps] = useState<number>(3); // Mock 3 completed steps
+  const [completedSteps, setCompletedSteps] = useState<number>(3);
 
   useEffect(() => {
     fetchWorkflowSteps();

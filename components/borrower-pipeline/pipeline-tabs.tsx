@@ -78,39 +78,57 @@ export function PipelineTabs() {
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="new" className="relative">
-              New
-              <span className="ml-2 bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
-                {getTabCount('new')}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="in_review" className="relative">
-              In Review
-              <span className="ml-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5">
-                {getTabCount('in_review')}
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="approved" className="relative">
-              Approved
-              <span className="ml-2 bg-green-500 text-white text-xs rounded-full px-2 py-0.5">
-                {getTabCount('approved')}
-              </span>
-            </TabsTrigger>
-          </TabsList>
 
-          <TabsContent value="new" className="mt-0">
-            {renderBorrowers(pipeline.new)}
-          </TabsContent>
+  {/* Mobile Dropdown */}
+  <div className="sm:hidden mb-4">
+    <select
+      value={activeTab}
+      onChange={(e) => setActiveTab(e.target.value)}
+      className="w-full border rounded px-3 py-2 text-sm"
+    >
+      <option value="new">New ({getTabCount('new')})</option>
+      <option value="in_review">In Review ({getTabCount('in_review')})</option>
+      <option value="approved">Approved ({getTabCount('approved')})</option>
+    </select>
+  </div>
 
-          <TabsContent value="in_review" className="mt-0">
-            {renderBorrowers(pipeline.in_review)}
-          </TabsContent>
+  {/* Desktop Tabs */}
+  <TabsList className="hidden sm:flex flex-wrap justify-center w-full gap-2 mb-4">
+    <TabsTrigger value="new" className="relative flex items-center">
+      New
+      <span className="ml-2 bg-blue-500 text-white text-xs rounded-full px-2 py-0.5">
+        {getTabCount('new')}
+      </span>
+    </TabsTrigger>
 
-          <TabsContent value="approved" className="mt-0">
-            {renderBorrowers(pipeline.approved)}
-          </TabsContent>
-        </Tabs>
+    <TabsTrigger value="in_review" className="relative flex items-center">
+      In Review
+      <span className="ml-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5">
+        {getTabCount('in_review')}
+      </span>
+    </TabsTrigger>
+
+    <TabsTrigger value="approved" className="relative flex items-center">
+      Approved
+      <span className="ml-2 bg-green-500 text-white text-xs rounded-full px-2 py-0.5">
+        {getTabCount('approved')}
+      </span>
+    </TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="new" className="mt-0">
+    {renderBorrowers(pipeline.new)}
+  </TabsContent>
+
+  <TabsContent value="in_review" className="mt-0">
+    {renderBorrowers(pipeline.in_review)}
+  </TabsContent>
+
+  <TabsContent value="approved" className="mt-0">
+    {renderBorrowers(pipeline.approved)}
+  </TabsContent>
+  
+</Tabs>
 
         <div className="mt-6 pt-6 border-t">
           <Label className="text-sm font-medium text-gray-700 uppercase tracking-wide">

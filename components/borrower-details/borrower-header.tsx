@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { BorrowerDetail } from '@/types';
+import { ChevronDown, ChevronUp } from 'lucide-react'; // Optional icons for toggle
 
 interface BorrowerHeaderProps {
   borrower: BorrowerDetail;
 }
 
 export function BorrowerHeader({ borrower }: BorrowerHeaderProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'new':
@@ -36,58 +40,55 @@ export function BorrowerHeader({ borrower }: BorrowerHeaderProps) {
   };
 
   return (
-     <div className="relative flex flex-col px-6 py-4">
-  {/* Top Row: Avatar, Name, Loan Amount */}
-  <div className="flex items-center justify-between mb-2">
-    <div className="flex items-center gap-3">
-      <Avatar>
-        <AvatarFallback>{getInitials(borrower.name)}</AvatarFallback>
-      </Avatar>
-      <h2 className="text-2xl font-bold text-gray-900">{borrower.name}</h2>
+    <div className="relative flex flex-col ">
+      
+      {/* Top Row: Avatar, Name, Loan Amount, Toggle Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-3">
+        
+        {/* Left: Avatar and Name */}
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarFallback>{getInitials(borrower.name)}</AvatarFallback>
+          </Avatar>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{borrower.name}</h2>
+        </div>
+
+        {/* Right: Loan Amount and Toggle for Mobile */}
+        <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto">
+          <div className="text-3xl sm:text-4xl font-bold text-gray-900">
+            {formatAmount(borrower.loan_amount)}
+          </div>
+
+          {/* Toggle Button only visible on mobile */}
+          <button
+            className="sm:hidden ml-4 p-1"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Details"
+          >
+            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Contact Info and Status */}
+      <div
+        className={`flex flex-col sm:flex-row sm:items-end text-sm text-gray-600 gap-2 transition-all duration-300 overflow-hidden ${
+          isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        } sm:max-h-none sm:opacity-100`}
+      >
+        {/* Contact Details */}
+        <div className="flex flex-col">
+          <span>{borrower.email}</span>
+          <span>{borrower.phone}</span>
+        </div>
+
+        {/* Status Badge aligned right on larger screens */}
+        <div className="sm:ml-auto">
+          <Badge className={`${getStatusColor(borrower.status)} px-3 py-1`}>
+            {borrower.status}
+          </Badge>
+        </div>
+      </div>
     </div>
-    <span className="text-4xl font-bold text-gray-900">
-      {formatAmount(borrower.loan_amount)}
-    </span>
-  </div>
-
-  {/* Contact Info and Status Row */}
-  <div className="flex items-end text-sm text-gray-600">
-    <div className="flex flex-col">
-      <span>{borrower.email}</span>
-      <span>{borrower.phone}</span>
-    </div>
-    
-    {/* Status badge aligned to bottom right */}
-    <div className="ml-auto">
-      <Badge className={`${getStatusColor(borrower.status)} px-3 py-1`}>
-        {borrower.status}
-      </Badge>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-    // <div className="flex items-center gap-4 px-6">
-    //   <Avatar>
-    //     <AvatarFallback>{getInitials(borrower.name)}</AvatarFallback>
-    //   </Avatar>
-    //   <div className="flex items-start gap-4 grow">
-    //     <div>
-    //       <h2 className="text-2xl font-bold text-gray-900 mb-1">{borrower.name}</h2>
-    //       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
-    //         <span>{borrower.email}</span>
-    //         <span>{borrower.phone}</span>
-    //         <span className="font-semibold text-gray-900">{formatAmount(borrower.loan_amount)}</span>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <Badge className={`${getStatusColor(borrower.status)} px-3 py-1`}>
-    //     {borrower.status}
-    //   </Badge>
-    // </div>
   );
 }
