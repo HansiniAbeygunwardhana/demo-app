@@ -1,10 +1,10 @@
-# DemoApp - Technical Assessment
+#  DemoApp - Technical Assessment
 
 This project is a technical assessment for a Frontend Developer role at Avaier Pvt Ltd, implementing a responsive loan application dashboard based on the provided requirements.
 
 ---
 
-## Tech Stack
+##  Tech Stack
 
 - **Next.js 15** – React Framework for server-rendered and client-side pages
 - **Tailwind CSS** – Utility-first CSS for consistent, responsive styling
@@ -16,25 +16,25 @@ This project is a technical assessment for a Frontend Developer role at Avaier P
 
 ---
 
-## Why NextJS over ReactJS?
+##  Why NextJS over ReactJS?
 
 In this project, I chose Next.js over plain React.js to take advantage of built-in server-side rendering, automatic routing, and powerful performance optimizations, all of which are essential for building fast, scalable, production-ready applications.
 
-## 📱 Features & Highlights
+##  Features & Highlights
 
-✔️ Fully **responsive layout**  
-✔️ **3-Column Grid** for desktop, collapses to stacked layout for mobile  
-✔️ Modular, reusable React components for maintainability  
-✔️ Borrower Pipeline with **tab filters** and dynamic active profile selection  
-✔️ Borrower Detail pane with status badges, AI Explainability section, Loan Summary, and escalation actions  
-✔️ Broker Overview with key stats, contact actions, onboarding workflow, and AI Assistant toggle  
-✔️ Accessible, consistent design using Tailwind and ShadCN  
-✔️ Uses **Zustand** for global state to fetching data
-✔️ Basic E2E test with Playwright to validate core interactions  
+- Fully **responsive layout**
+- **3-Column Grid** for desktop, collapses to stacked layout for mobile
+- Modular, reusable React components for maintainability
+- Borrower Pipeline with **tab filters** and dynamic active profile selection
+- Borrower Detail pane with status badges, AI Explainability section, Loan Summary, and escalation actions
+- Broker Overview with key stats, contact actions, onboarding workflow, and AI Assistant toggle
+- Accessible, consistent design using Tailwind and ShadCN
+- Uses **Zustand** for global state and data fetching
+- Basic E2E test with Playwright to validate core interactions
 
 ---
 
-## 🧩 Component Breakdown
+##  Component Breakdown
 
 - `Layout` – Page structure with responsive grid  
 - `BorrowerPipeline` – Left panel with tabs, borrower list, and radio section  
@@ -43,23 +43,23 @@ In this project, I chose Next.js over plain React.js to take advantage of built-
 
 ---
 
-## 📡 API Mock
+##  API Mock
 
 - Mock API responses based on provided structure (`api/` folder)  
 - No backend integration; uses local JSON data for demo  
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 - Playwright setup for basic end-to-end tests:  
-  ✅ Borrower selection updates detail pane  
-  ✅ Explainability accordion expands/collapses  
-  ✅ Button actions trigger console logs (mocked behavior)  
+  - Borrower selection updates detail pane  
+  - Explainability accordion expands/collapses  
+  - Button actions trigger console logs (mocked behavior)  
 
 ---
 
-## 🔥 Bonus Features
+##  Bonus Features
 
 - Status labels and badges styled with Tailwind  
 - Interactive, collapsible components using ShadCN Collapsible 
@@ -69,7 +69,7 @@ In this project, I chose Next.js over plain React.js to take advantage of built-
 
 ---
 
-## ✅ Project Setup
+##  Project Setup
 
 ```bash
 # Install dependencies
